@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Pengumpulan Tugas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #6a0dad;
+        }
+        .menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            justify-content: center;
+            padding: 20px;
+        }
+        .menu button {
+            padding: 15px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #6a0dad;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            transition: background 0.3s, transform 0.2s;
+        }
+        .menu button:hover {
+            background-color: #4a0a99;
+            transform: scale(1.05);
+        }
+        #tugas-container {
+            margin-top: 20px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        #file-preview {
+            margin-top: 10px;
+            width: 100%;
+            height: 500px;
+            display: none;
+            border: 1px solid #ddd;
+        }
+        #download-link {
+            display: none;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Portal Pengumpulan Tugas</h1>
+    <div class="container">
+        <div class="menu">
+            <button onclick="tampilkanForm('Tugas 1')">Tugas 1</button>
+            <button onclick="tampilkanForm('Tugas 2')">Tugas 2</button>
+            <button onclick="tampilkanForm('Tugas 3')">Tugas 3</button>
+            <button onclick="tampilkanForm('Tugas 4')">Tugas 4</button>
+            <button onclick="tampilkanForm('Tugas 5')">Tugas 5</button>
+            <button onclick="tampilkanForm('UTS')">UTS</button>
+            <button onclick="tampilkanForm('UAS')">UAS</button>
+        </div>
+    </div>
+
+    <div id="tugas-container">
+        <h2 id="judul-tugas"></h2>
+        <input type="file" id="file-input" accept=".html,.js,.pdf,.txt,.png,.jpg" onchange="simpanTugas()">
+        <p id="file-name"></p>
+        <iframe id="file-preview"></iframe>
+        <a id="download-link" download>🔽 Unduh Tugas</a>
+    </div>
+
+    <script>
+        function tampilkanForm(judul) {
+            document.getElementById('judul-tugas').innerText = judul;
+            document.getElementById('file-name').innerText = "";
+            document.getElementById('file-preview').style.display = "none";
+            document.getElementById('download-link').style.display = "none";
+            document.getElementById('file-input').value = "";
+
+            // Cek apakah sudah ada file yang tersimpan
+            const tugasTersimpan = localStorage.getItem(judul);
+            if (tugasTersimpan) {
+                const fileData = JSON.parse(tugasTersimpan);
+                document.getElementById('file-name').innerText = "File tersimpan: " + fileData.name;
+                tampilkanFile(fileData.url, fileData.type);
+            }
+
+            document.getElementById('tugas-container').style.display = 'block';
+        }
+
+        function simpanTugas() {
+            const fileInput = document.getElementById('file-input');
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const fileURL = e.target.result;
+                    const fileData = {
+                        name: file.name,
+                        type: file.type,
+                        url: fileURL
+                    };
+
+                    const tugasSekarang = document.getElementById('judul-tugas').innerText;
+                    localStorage.setItem(tugasSekarang, JSON.stringify(fileData));
+
+                    document.getElementById('file-name').innerText = "File tersimpan: " + file.name;
+                    tampilkanFile(fileURL, file.type);
+                };
+
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function tampilkanFile(fileURL, fileType) {
+            const filePreview = document.getElementById('file-preview');
+            const downloadLink = document.getElementById('download-link');
+
+            if (fileType.includes("image") || fileType === "application/pdf" || fileType.includes("html") || fileType.includes("javascript")) {
+                filePreview.src = fileURL;
+                filePreview.style.display = "block";
+                downloadLink.style.display = "none";
+            } else {
+                filePreview.style.display = "none";
+                downloadLink.href = fileURL;
+                downloadLink.innerText = "🔽 Unduh Tugas";
+                downloadLink.style.display = "block";
+            }
+        }
+    </script>
+</body>
+</html>

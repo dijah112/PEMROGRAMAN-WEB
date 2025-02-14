@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Organizer</title>
+    <style>
+        /* Gaya Umum */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f0f0;
+        }
+
+        /* Header */
+        header { 
+            background-color: #fcc9e5;
+            color: rgb(20, 18, 18);
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* Navigasi */
+        nav {
+            text-align: center;
+            background-color: #f1e1e1;
+            padding: 10px;
+        }
+        nav a {
+            color: #141212;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+        }
+        nav a:hover {
+            color: #1f1919;
+        }
+
+        /* Konten Utama */
+        section {
+            padding: 20px;
+            background-color: rgb(26, 22, 22);
+            max-width: 800px;
+            margin: 20px auto;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #f7f1f1;
+        }
+        p {
+            color: #f7f0f0;
+        }
+
+        /* Formulir Login */
+        #login-form {
+            background-color: #413c3c;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        #login-form label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        #login-form input[type="text"],
+        #login-form input[type="password"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #e9dede;
+            border-radius: 4px;
+        }
+        #login-form button {
+            background-color: #141614;
+            color: rgb(236, 228, 228);
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* Formulir Pencarian */
+        #search-form {
+            background-color: #4b4444;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        #search-form input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        #search-form button {
+            background-color: #101110;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Selamat Datang di Event Organizer GYURA</h1>
+        <p>Kami siap membantu Anda merencanakan acara yang sukses!</p>
+    </header>
+
+    <nav>
+        <a href="index.html">Home</a> |
+        <a href="booking_form.html">Booking Form</a> |
+        <a href="event_schedule.html">Event Schedule</a>
+    </nav>
+
+    <section>
+        <h2>Tentang Kami</h2>
+        <p>Event Organizer Gyura adalah solusi terbaik untuk pernikahan, pesta, konser, dan berbagai acara lainnya. Kami siap membantu Anda mulai dari perencanaan hingga pelaksanaan.</p>
+
+        <div id="login-form">
+            <h2>Login</h2>
+            <form action="login.php" method="post">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+
+                <button type="submit">Login</button>
+            </form>
+        </div>
+
+        <div id="search-form">
+            <h2>Pencarian</h2>
+            <form action="search.php" method="get">
+                <input type="text" name="keyword" placeholder="Masukkan kata kunci...">
+                <button type="submit">Cari</button>
+            </form>
+        </div>
+    </section>
+</body>
+</html>

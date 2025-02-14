@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Organizer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+        table {
+            width: 80%;
+            margin: auto;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Selamat Datang di Event Organizer</h1>
+    
+    <h2>Daftar Event</h2>
+    <table id="eventTable">
+        <thead>
+            <tr>
+                <th>ID Event</th>
+                <th>Nama Event</th>
+                <th>Tanggal</th>
+                <th>Lokasi</th>
+                <th>Deskripsi</th>
+            </tr>
+        </thead>
+        <tbody id="eventTableBody">
+            <!-- Data event dimuat dari JavaScript -->
+        </tbody>
+    </table>
+    <button onclick="exportToExcel('eventTable', 'event_data.xlsx')">Export Event ke Excel</button>
+
+    <h2>Daftar Pemesan</h2>
+    <table id="bookingTable">
+        <thead>
+            <tr>
+                <th>angel</th>
+                <th>angel.gmail.com</th>
+                <th>pesta</th>
+                <th>2025-05-20</th>
+                <th>66</th>
+            </tr>
+        </thead>
+        <tbody id="bookingTableBody">
+            <!-- Data pemesan dimuat dari JavaScript -->
+        </tbody>
+    </table>
+    <button onclick="exportToExcel('bookingTable', 'booking_data.xlsx')">Export Pemesan ke Excel</button>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let eventsData = {};
+
+            // Fetch data event
+            fetch("fetch_events.php")
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.getElementById("eventTableBody");
+                    tableBody.innerHTML = "";
+                    data.forEach(event => {
+                        eventsData[event.id] = event.name; // Simpan nama event berdasarkan ID
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+                            <td>${event.id}</td>
+                            <td>${event.name}</td>
+                            <td>${event.date}</td>
+                            <td>${event.location}</td>
+                            <td>${event.description}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+
+                    // Fetch data pemesan setelah event dimuat
+                    fetchBookings(eventsData);
+                })
+                .catch(error => console.error("Error fetching event data:", error));
+
+            function fetchBookings(eventsData) {
+                fetch("fetch_bookings.php")
+                    .then(response => response.json())
+                    .then(data => {
+                        const tableBody = document.getElementById("bookingTableBody");
+                        tableBody.innerHTML = "";
+
+                        if (data.length === 0) {
+                            tableBody.innerHTML = "<tr><td colspan='5'>Tidak ada data pemesan.</td></tr>";
+                            return;
+                        }
+
+                        data.forEach(booking => {
+                            const eventName = eventsData[booking.event_id] || "Event Tidak Diketahui";
+                            const row = document.createElement("tr");
+                            row.innerHTML = `
+                                <td>${booking.name}</td>
+                                <td>${booking.email}</td>
+                                <td>${eventName}</td>
+                                <td>${booking.date}</td>
+                                <td>${booking.guests}</td>
+                            `;
+                            tableBody.appendChild(row);
+                        });
+                    })
+                    .catch(error => console.error("Error fetching booking data:", error));
+            }
+        });
+
+        function exportToExcel(tableId, filename) {
+            let table = document.getElementById(tableId);
+            let workbook = XLSX.utils.table_to_book(table, { sheet: "Data" });
+            XLSX.writeFile(workbook, filename);
+        }
+    </script>
+</body>
+</html>

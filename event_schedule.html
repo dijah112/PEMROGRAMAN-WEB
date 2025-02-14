@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Schedule</title>
+    <style>
+        /* Gaya Umum */
+        body { 
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        /* Header */ 
+        header {
+            background-color: #fddbf5;
+            color: rgb(17, 13, 13);
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* Navigasi */
+        nav {
+            text-align: center;
+            background-color: #333;
+            padding: 10px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+        }
+        nav a:hover {
+            color: #ddd;
+        }
+
+        /* Tabel */
+        section {
+            padding: 20px;
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f7dbed;
+            color: rgb(26, 21, 21);
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #f1f9f1;
+        }
+
+        /* Tombol */
+        .buttons {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px;
+            margin: 5px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .print-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .export-btn {
+            background-color: #007BFF;
+            color: white;
+        }
+        .add-btn {
+            background-color: #28a745;
+            color: white;
+        }
+        button:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <header> 
+        <h1>Jadwal Acara</h1>
+        <p>Berikut adalah jadwal acara yang kami kelola di bulan ini.</p>
+    </header>
+
+    <!-- Navigasi -->
+    <nav>
+        <a href="index.html">Home</a> |
+        <a href="booking_form.html">Booking Form</a> |
+        <a href="event_schedule.html">Event Schedule</a>
+    </nav>
+
+    <!-- Tombol Print, Export & Tambah Acara -->
+    <div class="buttons">
+        <button class="print-btn" onclick="window.print()">Print</button>
+        <button class="export-btn" onclick="exportToExcel()">Export to Excel</button>
+        <button class="add-btn" onclick="addEvent()">Tambah Acara</button>
+    </div>
+
+    <!-- Tabel Jadwal Acara -->
+    <section>
+        <table id="eventTable">
+            <thead>
+                <tr>
+                    <th>Tanggal</th>
+                    <th>Nama Acara</th>
+                    <th>Lokasi</th>
+                </tr>
+            </thead>
+            <tbody id="eventBody">
+                <!-- Data akan di-generate oleh JavaScript -->
+            </tbody>
+        </table>
+    </section>
+
+    <script>
+        // Data awal dalam array JavaScript
+        let events = [
+            { date: "12 Agustus 2024", name: "Pernikahan Raja & Veronika", location: "Grand Ballroom Jakarta" },
+            { date: "20 Agustus 2024", name: "Konser Band", location: "Stadion GBK" }
+        ];
+
+        // Fungsi untuk menampilkan data ke tabel
+        function displayEvents() {
+            const eventBody = document.getElementById("eventBody");
+            eventBody.innerHTML = ""; // Kosongkan tabel sebelum diisi ulang
+
+            events.forEach((event, index) => {
+                let row = `<tr>
+                    <td>${event.date}</td>
+                    <td>${event.name}</td>
+                    <td>${event.location}</td>
+                </tr>`;
+                eventBody.innerHTML += row;
+            });
+        }
+
+        // Fungsi untuk mengekspor tabel ke file Excel
+        function exportToExcel() {
+            let table = document.getElementById("eventTable");
+            let tableHTML = table.outerHTML.replace(/ /g, '%20');
+
+            let excelBlob = new Blob(["\ufeff" + tableHTML], { type: "application/vnd.ms-excel" });
+            let downloadLink = document.createElement("a");
+
+            downloadLink.href = URL.createObjectURL(excelBlob);
+            downloadLink.download = "jadwal_acara.xls";
+            downloadLink.click();
+        }
+
+        // Fungsi untuk menambahkan acara baru
+        function addEvent() {
+            let date = prompt("Masukkan Tanggal Acara (contoh: 25 Agustus 2024):");
+            let name = prompt("Masukkan Nama Acara:");
+            let location = prompt("Masukkan Lokasi Acara:");
+
+            if (date && name && location) {
+                events.push({ date, name, location }); // Tambahkan ke array
+                displayEvents(); // Tampilkan kembali tabel
+                alert("Acara berhasil ditambahkan!");
+            } else {
+                alert("Data tidak lengkap!");
+            }
+        }
+
+        // Tampilkan data awal
+        displayEvents();
+    </script>
+</body>
+</html>
